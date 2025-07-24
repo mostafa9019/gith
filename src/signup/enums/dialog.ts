@@ -1,0 +1,4 @@
+export enum DialogTypes {
+  REJECT_SELLER = "REJECT_SELLER",
+  VALIDATE_SELLER = "VALIDATE_SELLER",
+}
