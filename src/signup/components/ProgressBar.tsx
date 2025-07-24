@@ -38,7 +38,7 @@ export function ProgressBar({
             )}
           >
             <span className="flex items-center gap-2">
-              {step.number} - {step.title}
+              {step.number} - {step.title} + "test"
             </span>
           </div>
         );
