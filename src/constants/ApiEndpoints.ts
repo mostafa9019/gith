@@ -6,6 +6,7 @@ const WSList = {
   getBankList: "/InscriptionSeller/BankList",
   getMainCategoryList: "/InscriptionSeller/PrincipalCategorieStoreList",
   getSourceList: "/InscriptionSeller/SourceList",
+  getHubList: "/InscriptionSeller/HubList",
   sendOtp: "/InscriptionSeller/SendCodeOtp",
   verifyOtp: "/InscriptionSeller/VerificationOtp",
   getInitialFormData: (transactionId: string) =>
@@ -19,6 +20,8 @@ const WSList = {
   authenticateUser: "/Authentification/login",
   processSellerByFinanceAgent: "/InscriptionSeller/ValidationRejectCommercial",
   processSellerByCommercialAgent: "/InscriptionSeller/ValidationRejectFinance",
+  getCitiesList: "/InscriptionSeller/CitiesList",
+  checkStoreName: "/InscriptionSeller/CheckOnlineStore",
 };
 
 const APIEndpoints = {

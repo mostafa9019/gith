@@ -21,6 +21,7 @@ import { useMutation } from "@tanstack/react-query";
 import { OtpPayload, OtpVerificationPayload } from "@/signup/interfaces";
 import { ErrorResponse, ServerResponse } from "@/interfaces";
 import { sendOtpCode, verifyOtpCode } from "../services";
+import { useNavigate } from "react-router-dom";
 
 interface OtpDialogProps {
   payload: OtpPayload;
@@ -29,6 +30,7 @@ interface OtpDialogProps {
 }
 
 export default function OtpDialog({ payload, open, setOpen }: OtpDialogProps) {
+  const navigate = useNavigate();
   const [time, setTime] = useState(90);
   const [isRunning, setIsRunning] = useState(false);
   const [error, setError] = useState<string>("");
@@ -44,10 +46,16 @@ export default function OtpDialog({ payload, open, setOpen }: OtpDialogProps) {
     onError: (error) => {
       setError(error.errorDescription);
     },
-    onSuccess: () => {
-      setOpen(false);
+    onSuccess: (response) => {
+      if (response.sucess && response.statusCode === 200) {
+        navigate(`/seller-signup/${payload.transactionId}`);
+        setOpen(false);
+      } else {
+        setError(response.message || "An unknown error occurred.");
+      }
     },
   });
+
 
   const signUpMutation = useMutation<ServerResponse, ErrorResponse, OtpPayload>(
     {
@@ -131,7 +139,7 @@ export default function OtpDialog({ payload, open, setOpen }: OtpDialogProps) {
 
         <div className="text-center space-y-4">
           <span className="text-md font-medium ">
-            Reseigner le code reçu par SMS
+            Reseigner le code reçu par Email
           </span>
           <div className="flex justify-center">
             <Controller
@@ -159,7 +167,7 @@ export default function OtpDialog({ payload, open, setOpen }: OtpDialogProps) {
           {time !== 0 && (
             <div className="text-center flex items-center justify-center space-x-2">
               <span className="text-sm text-gray-600">
-                Renvoyer le code dans:{" "}
+                Renvoyer le code par Email dans:{" "}
               </span>
               <span className="font-semibold text-sm">{formatTime(time)}</span>
             </div>
@@ -170,7 +178,7 @@ export default function OtpDialog({ payload, open, setOpen }: OtpDialogProps) {
                 className="text-sm text-gray-600 hover:text-primary transition-colors duration-200 hover:underline hover:cursor-pointer text-center"
                 onClick={handleResendOtp}
               >
-                Renvoyer le code
+                Renvoyer le code par Email
               </span>
             )}
             {error && (

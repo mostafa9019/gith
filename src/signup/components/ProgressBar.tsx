@@ -1,44 +1,50 @@
 import { cn } from "@/lib/utils";
-
-interface Step {
-  number: number;
-  title: string;
-  isActive?: boolean;
-  isCompleted?: boolean;
-}
-interface ProgressBarProps {
-  steps: Step[];
-  currentStep: number;
-  onChange?: (step: number) => void;
-  className?: string;
-}
+import { TProgressBarProps } from "@/signup/interfaces";
+import { useStepNavigation } from "@/signup/hooks";
 
 export function ProgressBar({
   steps,
   currentStep,
   onChange,
+  stepValidationStates = {},
   className,
-}: ProgressBarProps) {
+}: TProgressBarProps) {
+  const { handleStepClick, getStepClasses, getStepStatus } = useStepNavigation({
+    currentStep,
+    onChange,
+    stepValidationStates,
+  });
+
+  const renderStatusIndicator = (stepNumber: number) => {
+    const status = getStepStatus(stepNumber);
+    switch (status) {
+      case 'valid':
+        return <span className="text-xs">✓</span>;
+      case 'invalid':
+        return <span className="text-xs text-red-200">!</span>;
+      default:
+        return null;
+    }
+  };
+
   return (
     <div className={cn("w-full flex flex-col sm:flex-row gap-2", className)}>
-      {steps.map((step, _index) => {
-        const isActive = currentStep === step.number;
-        const isCompleted = currentStep > step.number;
+      {steps.map((step) => {
+        const stepClasses = getStepClasses(step.number);
+        const statusIndicator = renderStatusIndicator(step.number);
 
         return (
           <div
             key={step.number}
-            onClick={() => onChange && onChange(step.number)}
+            onClick={() => handleStepClick(step.number)}
             className={cn(
-              "flex-1 px-4 py-3 rounded-md text-sm font-medium transition-colors",
-              isActive || isCompleted
-                ? "bg-primary text-white"
-                : "bg-gray-100 text-gray-500",
-              onChange && "cursor-pointer hover:opacity-90"
+              "flex-1 px-4 py-3 rounded-md text-sm font-medium transition-colors relative bg-primary text-white",
+              stepClasses
             )}
           >
             <span className="flex items-center gap-2">
-              {step.number} - {step.title} + "test"
+              {step.number} - {step.title}
+              {statusIndicator}
             </span>
           </div>
         );

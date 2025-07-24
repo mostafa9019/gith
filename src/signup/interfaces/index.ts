@@ -1,10 +1,23 @@
+import {
+  Control,
+  FieldErrors,
+  UseFormGetValues,
+  UseFormRegister,
+  UseFormSetValue,
+  UseFormWatch,
+} from "react-hook-form";
 import { DocType } from "../enums";
-import { sellerCredentialsFormData } from "../zod";
+import {
+  type SellerCommercialInformationFormData,
+  type sellerCredentialsFormData,
+  type SellerStoreFormData,
+} from "@/signup/zod/index";
+import { ListOption } from "@/interfaces";
 
 export interface CustomFile {
   id?: number;
   refIdDocType: DocType;
-  idSeller: string;
+  idSeller: string | number | null;
   name: string;
   content: string;
   contentType: string;
@@ -33,6 +46,7 @@ export interface SellerCredentials {
   lastName: string;
   hasPower: boolean;
   docs: CustomFile[];
+  isDirector?: boolean;
 }
 
 export interface SellerCommercialInformation {
@@ -40,14 +54,14 @@ export interface SellerCommercialInformation {
   id_company?: string;
   socialRaison?: string;
   codePostalSiege?: string;
-  citySiege?: string;
+  refIdCitySiege?: string;
   isSelfEmployed?: boolean;
   ice?: string;
   rc?: string;
   nameRepresentantFiscal?: string;
   adressRepresentantFiscal?: string;
   capitalCompany?: string;
-  refIdCurrency?: string;
+  // refIdCurrency?: string;
   companyCreationDate?: string;
   docs?: CustomFile[];
 }
@@ -92,14 +106,14 @@ export interface SellerInformation {
   hasPower: boolean;
   socialRaison: string;
   codePostalSiege: string;
-  citySiege: string;
+  refIdCitySiege: string;
   isSelfEmployed: boolean;
   ice: string;
   rc: string;
   nameRepresentantFiscal: string;
   adressRepresentantFiscal: string;
   capitalCompany: string;
-  refIdCurrency: string;
+  // refIdCurrency: string;
   companyCreationDate: string;
   refIdBank: string;
   nameAccountHolder: string;
@@ -114,6 +128,7 @@ export interface SellerInformation {
   checkedCguOctopia: boolean;
   checkedAcceptRegistration: boolean;
   checkedCgm: boolean;
+  isDirector?: boolean;
 }
 
 export interface FormatedSellerInformation {
@@ -125,8 +140,73 @@ export interface FormatedSellerInformation {
   commercialInfo: SellerCommercialInformation;
   bankingInfo: SellerBankingInformation;
   storeInfo: SellerStoreInformation;
+
+  IsDirector?: boolean;
 }
 
 export interface SellerCredentialsFormData_ extends sellerCredentialsFormData {
   id: string;
 }
+
+export type TStep = {
+  number: number;
+  title: string;
+  isActive?: boolean;
+  isCompleted?: boolean;
+};
+
+export type TProgressBarProps = {
+  steps: TStep[];
+  currentStep: number;
+  onChange?: (step: number) => void;
+  stepValidationStates?: Record<number, boolean>;
+  className?: string;
+};
+
+export type CredentialsDocumentSectionProps = {
+  setValue: UseFormSetValue<sellerCredentialsFormData>;
+  getValues: UseFormGetValues<sellerCredentialsFormData>;
+  errors: FieldErrors<sellerCredentialsFormData>;
+  sellerId?: string;
+};
+
+export type TCredentialsInformationSectionProps = {
+  control: Control<sellerCredentialsFormData>;
+  register: UseFormRegister<sellerCredentialsFormData>;
+  errors: FieldErrors<sellerCredentialsFormData>;
+  watch: UseFormWatch<sellerCredentialsFormData>;
+  setValue: UseFormSetValue<sellerCredentialsFormData>;
+  genderOptions: Array<{ id: number; name: string }>;
+  functionOptions: Array<{ id: number; name: string }>;
+  initialData?: SellerCredentials;
+};
+
+export type TCommercialInformationSectionProps = {
+  control: Control<SellerCommercialInformationFormData>;
+  register: UseFormRegister<SellerCommercialInformationFormData>;
+  errors: FieldErrors<SellerCommercialInformationFormData>;
+  watch: UseFormWatch<SellerCommercialInformationFormData>;
+  setValue: UseFormSetValue<SellerCommercialInformationFormData>;
+
+  selectedDate: Date;
+  setSelectedDate: (date: Date) => void;
+  citiesList: ListOption[];
+};
+
+export type TStoreInformationSectionProps = {
+  register: UseFormRegister<SellerStoreFormData>;
+  errors: FieldErrors<SellerStoreFormData>;
+};
+
+export type TStoreConfigurationSectionProps = {
+  control: Control<SellerStoreFormData>;
+  register: UseFormRegister<SellerStoreFormData>;
+  errors: FieldErrors<SellerStoreFormData>;
+  categoryOptions: Array<{ id: number; name: string }>;
+  hubOptions: Array<{ id: number; name: string }>;
+};
+
+export type TStoreTermsSectionProps = {
+  watch: UseFormWatch<SellerStoreFormData>;
+  setValue: UseFormSetValue<SellerStoreFormData>;
+};

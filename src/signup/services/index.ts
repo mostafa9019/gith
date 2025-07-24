@@ -39,6 +39,12 @@ export const getMainCategoryList = async () => {
   return response.data.data;
 };
 
+export const getHubList = async () => {
+  const response: AxiosResponse<TypedServerResponse<ListOption[]>> =
+    await api.get(APIEndpoints.list().getHubList);
+  return response.data.data;
+};
+
 export const getInitialFormData = async (transactionId: string) => {
   const response: AxiosResponse<TypedServerResponse<SellerInformation>> =
     await api.get(APIEndpoints.list().getInitialFormData(transactionId));

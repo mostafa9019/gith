@@ -20,10 +20,23 @@ export default function Stepper({
   saveDisabled,
   finalizeDisabled,
 }: StepperProps) {
-  const { currentStep, setCurrentStep } = useStepperStore();
+  const { 
+    currentStep, 
+    setCurrentStep, 
+    stepValidationStates, 
+    canNavigateToStep 
+  } = useStepperStore();
+  
   const isLastStep = currentStep === 4;
   const isFirstStep = currentStep === 1;
+  const isCurrentStepValid = stepValidationStates[currentStep] || false;
+  const canMoveToNext = canNavigateToStep(currentStep + 1);
+  
   const handleMoveToNextStep = () => {
+    if (!canMoveToNext) {
+      return;
+    }
+    
     window.scrollTo({ top: 0, behavior: "smooth" });
     if (currentStep < 4) {
       setCurrentStep(currentStep + 1);
@@ -36,6 +49,7 @@ export default function Stepper({
       setCurrentStep(currentStep - 1);
     }
   };
+
   return (
     <>
       <div className="hidden md:block">
@@ -43,7 +57,11 @@ export default function Stepper({
           <Button disabled={isFirstStep} onClick={handleMoveToPreviousStep}>
             Page précédente
           </Button>
-          <Button onClick={handleMoveToNextStep} disabled={isLastStep}>
+          <Button 
+            onClick={handleMoveToNextStep} 
+            disabled={isLastStep || !canMoveToNext}
+            title={!isCurrentStepValid ? "Veuillez compléter les champs obligatoires" : ""}
+          >
             Page suivante
           </Button>
           <ActionButton
@@ -59,7 +77,7 @@ export default function Stepper({
             disabled={
               (finalizeLoading as boolean) ||
               (finalizeDisabled as boolean) ||
-              !isLastStep
+              !isLastStep 
             }
           />
         </div>
@@ -109,7 +127,8 @@ export default function Stepper({
             className="rounded-full"
             aria-label="Suivant"
             onClick={() => handleMoveToNextStep()}
-            disabled={isLastStep}
+            disabled={isLastStep || !canMoveToNext}
+            title={!isCurrentStepValid ? "Veuillez compléter les champs obligatoires" : ""}
           >
             <ChevronRight className="h-6 w-6" />
           </Button>

@@ -1,3 +1,9 @@
+import type {
+  SellerBankingInformation,
+  SellerCommercialInformation,
+  SellerStoreInformation,
+} from "@/signup/interfaces";
+
 export enum SellerSignupTexts {
   TITLE = "Bienvenue sur notre espace d'inscription vendeur",
 }
@@ -62,3 +68,44 @@ export const RoleOptions: { label: string; value: string }[] = [
     value: "responsable_operations",
   },
 ];
+
+export const defaultBankingInfo: SellerBankingInformation = {
+  id_seller: "",
+  id_bank: "",
+  refIdBank: "",
+  nameAccountHolder: "",
+  rib: "",
+  docs: [],
+};
+
+export const defaultCommercialInfo: SellerCommercialInformation = {
+  id_seller: "",
+  id_company: "",
+  socialRaison: "",
+  codePostalSiege: "",
+  refIdCitySiege: "",
+  isSelfEmployed: false,
+  ice: "",
+  rc: "",
+  nameRepresentantFiscal: "",
+  adressRepresentantFiscal: "",
+  capitalCompany: "",
+  // refIdCurrency: "",
+  companyCreationDate: "",
+  docs: [],
+};
+
+export const defaultStoreInfo: SellerStoreInformation = {
+  id_seller: "",
+  id_store: "",
+  storeName: "",
+  numberProduct: "",
+  refIdPrincipalCategorie: "",
+  hasWebSite: false,
+  urlWebSite: "",
+  hasPhysicalStore: false,
+  sellsBrandedProducts: false,
+  checkedCguOctopia: false,
+  checkedAcceptRegistration: false,
+  checkedCgm: false,
+};

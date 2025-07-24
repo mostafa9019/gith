@@ -32,7 +32,7 @@ export async function FileToCustomFile(
 ): Promise<CustomFile> {
   return {
     refIdDocType: type,
-    idSeller: sellerId,
+    idSeller: sellerId ? parseInt(sellerId) : null,
     name: file.name,
     content: await fileToBase64(file),
     contentType: file.type,

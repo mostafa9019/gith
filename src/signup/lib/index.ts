@@ -9,6 +9,7 @@ import {
 export function formatSellerInformation(
   sellerInfo: SellerInformation
 ): FormatedSellerInformation {
+  console.log("sellerInfo", sellerInfo);
   const formattedSeller: FormatedSellerInformation = {
     id_seller: sellerInfo.id_seller.toString(),
     submited: sellerInfo.submited,
@@ -23,6 +24,8 @@ export function formatSellerInformation(
       firstName: sellerInfo.firstName,
       lastName: sellerInfo.lastName,
       hasPower: sellerInfo.hasPower,
+      isDirector: sellerInfo.isDirector,
+
       docs: getDocsByType(
         sellerInfo.docs,
         DocType.CRENDENTIAL,
@@ -35,14 +38,14 @@ export function formatSellerInformation(
       id_company: sellerInfo.id_company,
       socialRaison: sellerInfo.socialRaison,
       codePostalSiege: sellerInfo.codePostalSiege,
-      citySiege: sellerInfo.citySiege,
+      refIdCitySiege: sellerInfo.refIdCitySiege,
       isSelfEmployed: sellerInfo.isSelfEmployed,
       ice: sellerInfo.ice,
       rc: sellerInfo.rc,
       nameRepresentantFiscal: sellerInfo.nameRepresentantFiscal,
       adressRepresentantFiscal: sellerInfo.adressRepresentantFiscal,
       capitalCompany: sellerInfo.capitalCompany,
-      refIdCurrency: sellerInfo.refIdCurrency,
+      // refIdCurrency: sellerInfo.refIdCurrency,
       companyCreationDate: sellerInfo.companyCreationDate,
       docs: getDocsByType(
         sellerInfo.docs,
@@ -100,16 +103,40 @@ export const getDocsByType = (
 };
 
 export function getDaysRemaining(creationDateStr: string): number {
-  const startDate = new Date(creationDateStr);
-  if (isNaN(startDate.getTime())) {
-    console.error(`Invalid date format: ${creationDateStr}`);
+  if (!creationDateStr || creationDateStr.trim() === "") {
+    console.warn("Date de création vide ou non définie fournie");
     return 0;
   }
-  const deadlineDate = new Date(startDate);
-  deadlineDate.setDate(deadlineDate.getDate() + 30);
-  const currentDate = new Date();
-  const differenceMs = deadlineDate.getTime() - currentDate.getTime();
-  const daysRemaining = Math.ceil(differenceMs / (1000 * 60 * 60 * 24));
+
+  const startDate = new Date(creationDateStr);
+
+  if (isNaN(startDate.getTime())) {
+    console.error(
+      `Format de date invalide: ${creationDateStr}. Format ISO attendu.`
+    );
+    return 0;
+  }
+
+  const startDateUTC = new Date(
+    Date.UTC(
+      startDate.getUTCFullYear(),
+      startDate.getUTCMonth(),
+      startDate.getUTCDate()
+    )
+  );
+
+  const deadlineDate = new Date(startDateUTC.getTime());
+  deadlineDate.setUTCDate(deadlineDate.getUTCDate() + 30);
+
+  const now = new Date();
+  const currentDateUTC = new Date(
+    Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate())
+  );
+
+  const differenceMs = deadlineDate.getTime() - currentDateUTC.getTime();
+
+  const daysRemaining = Math.floor(differenceMs / (1000 * 60 * 60 * 24));
+
   return Math.max(0, daysRemaining);
 }
 

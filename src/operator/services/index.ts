@@ -66,3 +66,9 @@ export const getSellerStatusList = async () => {
     await api.get(APIEndpoints.list().getSellerStatusList);
   return response.data.data;
 };
+
+export const getCitiesList = async () => {
+  const response: AxiosResponse<TypedServerResponse<ListOption[]>> =
+    await api.get(APIEndpoints.list().getCitiesList);
+  return response.data.data;
+};

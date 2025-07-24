@@ -6,7 +6,7 @@ export interface TypedServerResponse<T> {
 export interface ServerResponse {
   sucess: boolean;
   message: string;
-  data: any;
+  statusCode: number;
 }
 
 export interface ErrorResponse {

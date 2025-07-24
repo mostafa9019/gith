@@ -13,12 +13,14 @@ interface FileUploadProps {
   files: CustomFile[];
   setFiles: UseFormSetValue<any>;
   docType: DocType;
+  sellerId?: string;
 }
 
 export default function FileUpload({
   files,
   setFiles,
   docType,
+  sellerId,
 }: FileUploadProps) {
   const handleFileChange = (newfiles: File[]) => {
     processFiles(newfiles);
@@ -26,14 +28,16 @@ export default function FileUpload({
 
   const processFiles = async (uploadedFiles: File[]) => {
     if (uploadedFiles.length > 0) {
-      const newFile = await FileToCustomFile(uploadedFiles[0], docType, "");
-      setFiles("docs", [...files, newFile], { shouldValidate: true });
+      const newFile = await FileToCustomFile(uploadedFiles[0], docType, sellerId || "");
+      const currentFiles = files || [];
+      setFiles("docs", [...currentFiles, newFile], { shouldValidate: true });
     } else {
       setFiles("docs", [], { shouldValidate: true });
     }
   };
   const handleRemoveFile = (fileToRemove: CustomFile) => {
-    const updatedDocs = files.filter((file) => file !== fileToRemove);
+    const currentFiles = files || [];
+    const updatedDocs = currentFiles.filter((file) => file !== fileToRemove);
     setFiles("docs", updatedDocs, { shouldValidate: true });
   };
 
@@ -66,7 +70,7 @@ export default function FileUpload({
         </div>
       </Button>
 
-      {files &&
+      {files && files.length > 0 &&
         files.map((file, index) => (
           <div key={index} className="flex items-center ">
             <div

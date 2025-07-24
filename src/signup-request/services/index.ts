@@ -26,7 +26,7 @@ export const sendOtpCode = async (payload: OtpPayload) => {
 export const verifyOtpCode = async (payload: OtpVerificationPayload) => {
   try {
     const response = await api.post(APIEndpoints.list().verifyOtp, payload);
-    return response.data.data;
+    return response.data;
   } catch (error) {
     if (axios.isAxiosError(error) && error.response?.data) {
       const errorData = error.response.data as ErrorResponse;
